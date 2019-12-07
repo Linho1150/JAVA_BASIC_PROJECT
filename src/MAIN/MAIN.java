@@ -12,62 +12,23 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.*;
 
 
-class RightFrame extends JFrame {
-	// 장바구니에 추가하는 버튼 (>>) Frame생성
-	public RightFrame() {
-		setTitle("add");
-		Font f1 = new Font("돋움", Font.PLAIN, 10);
-		Container c = getContentPane();
-		c.setLayout(new FlowLayout());
-
-		JLabel lb = new JLabel("수량 입력");
-		JTextField tx = new JTextField(20);
-		JButton ok = new JButton("확인");
-
-		lb.setFont(f1);
-		ok.setFont(f1);
-
-		c.add(lb);
-		c.add(tx);
-		c.add(ok);
-
-		setSize(700, 150);
-		setVisible(true);
-	}
-}
-
-class LeftFrame extends JFrame {
-	public LeftFrame() {
-		setTitle("remove");
-		Font f1 = new Font("돋움", Font.PLAIN, 10);
-		Container c = getContentPane();
-		c.setLayout(new FlowLayout());
-
-		JLabel lb = new JLabel("수량 입력");
-		JTextField tx = new JTextField(20);
-		JButton ok = new JButton("확인");
-
-		lb.setFont(f1);
-		ok.setFont(f1);
-
-		c.add(lb);
-		c.add(tx);
-		c.add(ok);
-
-		setSize(300, 150);
-		setVisible(true);
-
-	}
-}
-
 public class MAIN extends JFrame {
-	public String header[] = { "품목명","단위","등급","가격","산지","친환경구분","입력일" };
-	public String contents[][]= {{"a","b"}};
+	public String header[] = {"품목명","단위","등급","가격","산지","친환경구분","입력일"};
+	public Object combo1 = "";
+	public Object combo2 = "";
 
 	MAIN() {
+		//초기세팅---------------------------------------------------
+		setTitle("농수산물 구매 프로세스");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		Container c = getContentPane();
+		////----------------------------------------------------------
+		
 		//첫화면 실행---------------------------------------------------
 		Tools t1=new Tools();
 		List<List<String>> conten = t1.run();
@@ -75,21 +36,12 @@ public class MAIN extends JFrame {
 		
 		//Jtabel에 넣기 위한 List to String array ---------------------------------------------------
 		String[][] array = new String[conten.size()][];
-		for (int i = 0; i < conten.size(); i++) {
+		/*for (int i = 0; i < conten.size(); i++) {
 		    List<String> row = conten.get(i);
 		    array[i] = row.toArray(new String[row.size()]);
-		}
+		}*/
 		////----------------------------------------------------------
 		
-		
-		
-		setTitle("수산물 장바구니");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		// 생선 이름 데이터
-
-		Container c = getContentPane();
-
 		JPanel j1 = new JPanel();
 		JPanel j2 = new JPanel();
 
@@ -100,12 +52,21 @@ public class MAIN extends JFrame {
 		c.add(j2);
 
 		// panel j1
-		// Jcombobox
+		// Jcombobox1
 		JLabel name = new JLabel("category");
-		String[] namelist=t1.getItem();
+		String[] namelist=t1.getItemlist();
 		JComboBox<String> comboname = new JComboBox<String>(namelist); // 생선이름데이터 리스트
 		j1.add(name);
 		j1.add(comboname);
+		
+		// Jcombobox2
+		JLabel name1 = new JLabel("cate123123gory");
+		String[] namelist1=t1.getItemlist();
+		JComboBox<String> comboname1 = new JComboBox<String>(namelist1); // 생선이름데이터 리스트
+		j1.add(name1);
+		j1.add(comboname1);
+		comboname1.setEnabled(false);
+
 
 		// panel j2
 		// JTable원산지
@@ -114,25 +75,24 @@ public class MAIN extends JFrame {
 		JScrollPane sc = new JScrollPane(table);
 		sc.setBounds(20, 20, 400, 200);
 		j2.add(sc);
-
+		sc.setEnabled(false);
+		
 		// 오른쪽 테이블
-		String header2[] = { "원산지", "가격" };
-		String contents2[][] = { { "ex1", "가격" }, { "ex2", "가격" }, { "ex3", "가격" } };
-		DefaultTableModel model2 = new DefaultTableModel(contents2, header2);
+		String contents2[][] = {};
+		DefaultTableModel model2 = new DefaultTableModel(contents2, header);
 		JTable table2 = new JTable(model2);
 		JScrollPane sc2 = new JScrollPane(table2);
 		sc2.setBounds(500, 20, 400, 200);
 		j2.add(sc2);
+		sc2.setEnabled(false);
 
-		// button
+		//button
 		Font f1 = new Font("돋움", Font.PLAIN, 10);
 		Font f2 = new Font("맑은고딕", Font.PLAIN, 10);
 		JButton add = new JButton("Add all");
 		JButton remove = new JButton("Remove all");
 		JButton additems = new JButton("Add/remove items");
 		JButton graph = new JButton("graph");
-		JButton right = new JButton(">>");
-		JButton left = new JButton("<<");
 
 		add.setFont(f1);
 		add.setBounds(20, 340, 100, 30);
@@ -143,33 +103,11 @@ public class MAIN extends JFrame {
 		additems.setFont(f1);
 		additems.setBounds(190, 240, 130, 30);
 
-		right.setFont(f2);
-		right.setBounds(220, 60, 50, 30);
-
-		left.setFont(f2);
-		left.setBounds(220, 140, 50, 30);
-
 		j2.add(add);
 		j2.add(remove);
 		j2.add(additems);
 		j2.add(graph);
-		j2.add(right);
-		j2.add(left);
 
-		right.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new RightFrame();
-
-			}
-		});
-
-		left.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				new LeftFrame();
-
-			}
-		});
 		additems.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -185,7 +123,6 @@ public class MAIN extends JFrame {
 		});
 
 		additems.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JFrame jf = new JFrame("insert/remove data");
 				jf.setLayout(new FlowLayout());
@@ -245,39 +182,98 @@ public class MAIN extends JFrame {
 
 		// combobox listener
 		comboname.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JComboBox jcb = (JComboBox) e.getSource();
-				Object name = jcb.getSelectedItem();
+				combo1 = jcb.getSelectedItem();				
+				
+				comboname1.setEnabled(true);
+				comboname1.removeAllItems();
+				
+				//맞춤 table 가져오기---------------------------------------
 				List<List<String>> tmp = new ArrayList<List<String>>();
 				for(int i=0; i<conten.size();i++) {
 				    List<String> row = conten.get(i);
-				    if(row.get(0).equals(name)) {
+				    if(row.get(0).equals(combo1)) {
 				    	tmp.add(row);
 				    }
 				}
+				////---------------------------------------------------
+				
+				//TABLE에 맞는 형변환---------------------------------------
 				String[][] array = new String[tmp.size()][];
 				for (int i = 0; i < tmp.size(); i++) {
 				    List<String> row = tmp.get(i);
 					array[i] = row.toArray(new String[row.size()]);					
-				}		
+				}	
+				////---------------------------------------------------
+				
 				DefaultTableModel model = new DefaultTableModel(array, header);
 				table.setModel(model);
+				List<String> numdata = new ArrayList<String>();
+			    for (int count = 0; count < model.getRowCount(); count++){
+			    	String tmp_numdata=model.getValueAt(count, 4).toString();
+			    	if(numdata.contains(tmp_numdata)) {continue;}else {
+			    		numdata.add(model.getValueAt(count, 4).toString());
+			    		comboname1.addItem(model.getValueAt(count, 4).toString());
+			    	}
+			    }
 			}
 		});
+		
+		// combobox listener
+		comboname1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox jcb = (JComboBox) e.getSource();
+				combo2 = jcb.getSelectedItem();
+				
+				sc.setEnabled(true);
+				sc2.setEnabled(true);
+
+				List<List<String>> tmp = new ArrayList<List<String>>();
+				for(int i=0; i<conten.size();i++) {
+				    List<String> row = conten.get(i);
+				    if(row.get(0).equals(combo1)&& row.get(4).equals(combo2)) {
+				    	tmp.add(row);
+				    }
+				}
+				
+				String[][] array = new String[tmp.size()][];
+				for (int i = 0; i < tmp.size(); i++) {
+				    List<String> row = tmp.get(i);
+					array[i] = row.toArray(new String[row.size()]);					
+				}	
+				
+				DefaultTableModel model = new DefaultTableModel(array, header);
+				table.setModel(model);
+
+
+			}
+		});
+
 		// Add all button listener
 		add.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < contents.length; i++) {
-					model2.addRow(contents[i]);
+				TableModel copymodel = table.getModel();
+				int [] indexs = table.getSelectedRows();
+				Object[] copyrow = new Object[7];
+				DefaultTableModel copymode2=(DefaultTableModel) table2.getModel();
+				for(int i = 0; i<indexs.length; i++) {
+					copyrow[0]=copymodel.getValueAt(indexs[i], 0);
+					copyrow[1]=copymodel.getValueAt(indexs[i], 1);
+					copyrow[2]=copymodel.getValueAt(indexs[i], 2);
+					copyrow[3]=copymodel.getValueAt(indexs[i], 3);
+					copyrow[4]=copymodel.getValueAt(indexs[i], 4);
+					copyrow[5]=copymodel.getValueAt(indexs[i], 5);
+					copyrow[6]=copymodel.getValueAt(indexs[i], 6);
+
+					copymode2.addRow(copyrow);
 				}
 
 			}
 		});
 
 		// ui
-		setSize(8000, 650);
+		setSize(1000, 650);
 		setVisible(true);
 	}
 
@@ -289,6 +285,7 @@ public class MAIN extends JFrame {
 class Tools {
 	List<List<String>> ret = new ArrayList<List<String>>();
     List<String> itemList = new ArrayList<String>();
+
 	public List<List<String>> run() {
 		BufferedReader br = null;
 	    String line;
@@ -299,7 +296,7 @@ class Tools {
 	            List<String> tmpList = new ArrayList<String>();
 	            line=line.replace("\"","");
                 String[] field = line.split(cvsSplitBy);
-                itemList.add(field[0]);
+                itemList.add(field[0]);              
                 tmpList = Arrays.asList(field);
 	            ret.add(tmpList);
             }
@@ -320,12 +317,13 @@ class Tools {
 		return ret;
     }
 
-	public String[] getItem() {
-	    HashSet<String> arr2 = new HashSet<String>(itemList);
-	    ArrayList<String> arr3 = new ArrayList<String>(arr2);
-	    System.out.print("안내 : item 로딩을 완료하였습니다.\n");
-	    String[] stockArr = new String[arr3.size()];
-	    stockArr = arr3.toArray(stockArr);
+	public String[] getItemlist() {
+	    HashSet<String> tmp_hasharray = new HashSet<String>(itemList);
+	    ArrayList<String> tmp_itemList = new ArrayList<String>(tmp_hasharray);
+	    System.out.print("안내 : itemList 로딩을 완료하였습니다.\n");
+	    String[] stockArr = new String[tmp_itemList.size()];
+	    stockArr = tmp_itemList.toArray(stockArr);
 	    return stockArr;
 	}
+
 }
