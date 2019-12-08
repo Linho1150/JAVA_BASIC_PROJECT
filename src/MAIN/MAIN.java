@@ -42,6 +42,7 @@ class addFrame extends JFrame {
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setFrame();
+				setVisible(false);
 			}
 		});
 	}
@@ -61,9 +62,44 @@ class addFrame extends JFrame {
 			copyrow[5] = tx.getText();
 			copymode2.addRow(copyrow);
 			tmp = tmp + (Integer.parseInt(tx.getText()) * Integer.parseInt(copyrow[3].toString()));
-			System.out.print(tmp);
 		}
 		total_price.setText(String.valueOf(tmp));
+	}
+}
+
+class Seeall extends JFrame {
+	private JButton ok = new JButton("확인");
+	private String header[] = { "품목명", "단위", "등급", "가격", "산지", "친환경구분", "입력일" };
+
+	public Seeall(List<List<String>> data2) {
+		String[][] array = new String[data2.size()][];
+		for (int i = 0; i < data2.size(); i++) { 
+			List<String> row = data2.get(i);
+			array[i] = row.toArray(new String[row.size()]); 
+		}
+		
+		setTitle("add");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		Container c = getContentPane();
+		c.setLayout(new FlowLayout());
+
+		JLabel lb = new JLabel("전체 목록");
+		DefaultTableModel seeall_model = new DefaultTableModel(array, header);
+		JTable seeAll_table = new JTable(seeall_model);
+		JScrollPane sc = new JScrollPane(seeAll_table);
+		
+		c.add(lb);
+		c.add(sc);	
+		c.add(ok);
+
+		setSize(500, 700);
+		setVisible(true);
+		ok.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//window 닫기 기능
+				setVisible(false);
+			}
+		});
 	}
 }
 
@@ -76,18 +112,18 @@ public class MAIN extends JFrame {
 	MAIN() {
 		// 초기세팅---------------------------------------------------
 		setTitle("농수산물 구매 프로세스");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		Container c = getContentPane();
 		//// ----------------------------------------------------------
 
 		// 첫화면 실행---------------------------------------------------
 		Tools t1 = new Tools();
-		List<List<String>> conten = t1.run();
+		List<List<String>> data = t1.run();
 		//// ----------------------------------------------------------
 
 		// Jtabel에 넣기 위한 List to String array
 		// ---------------------------------------------------
-		String[][] array = new String[conten.size()][];
+		//String[][] array = new String[data.size()][];
 		/*
 		 * for (int i = 0; i < conten.size(); i++) { List<String> row = conten.get(i);
 		 * array[i] = row.toArray(new String[row.size()]); }
@@ -97,145 +133,82 @@ public class MAIN extends JFrame {
 		JPanel j1 = new JPanel();
 		JPanel j2 = new JPanel();
 
-		j1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 2));
-		j2.setLayout(null);
+		j1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
+		j2.setLayout(new FlowLayout());
 
 		c.add(j1, BorderLayout.NORTH);
 		c.add(j2);
 
 		// panel j1
 		// Jcombobox1
-		JLabel name = new JLabel("category");
-		String[] namelist = t1.getItemlist();
-		JComboBox<String> comboname = new JComboBox<String>(namelist); // 생선이름데이터 리스트
-		j1.add(name);
-		j1.add(comboname);
+		JLabel label1 = new JLabel("상품목록 : ");
+		String[] label1_list = t1.getItemlist();
+		JComboBox<String> label1_combobox = new JComboBox<String>(label1_list); // 생선이름데이터 리스트
+		j1.add(label1);
+		j1.add(label1_combobox);
 
 		// Jcombobox2
-		JLabel name1 = new JLabel("cate123123gory");
+		JLabel name1 = new JLabel(" 원산지 : ");
 		String[] namelist1 = t1.getItemlist();
 		JComboBox<String> comboname1 = new JComboBox<String>(namelist1); // 생선이름데이터 리스트
 		j1.add(name1);
 		j1.add(comboname1);
 		comboname1.setEnabled(false);
 
+		JLabel total = new JLabel(" 총금액 : ");
+		j1.add(total);
 		JLabel total_price = new JLabel("0");
 		j1.add(total_price);
 
 		// panel j2
 		// JTable원산지
+		String[][] array = new String[0][];
 		DefaultTableModel model = new DefaultTableModel(array, header);
 		JTable table = new JTable(model);
 		JScrollPane sc = new JScrollPane(table);
-		sc.setBounds(20, 20, 400, 200);
 		j2.add(sc);
-		sc.setEnabled(false);
-
+		
 		// 오른쪽 테이블
-		String contents2[][] = {};
-		DefaultTableModel model2 = new DefaultTableModel(contents2, header2);
+		DefaultTableModel model2 = new DefaultTableModel(array, header2);
 		JTable table2 = new JTable(model2);
 		JScrollPane sc2 = new JScrollPane(table2);
-		sc2.setBounds(500, 20, 400, 200);
 		j2.add(sc2);
-		sc2.setEnabled(false);
 
 		// button
-		Font f1 = new Font("돋움", Font.PLAIN, 10);
-		Font f2 = new Font("맑은고딕", Font.PLAIN, 10);
-		JButton add = new JButton("Add all");
-		JButton remove = new JButton("Remove all");
-		JButton additems = new JButton("Add/remove items");
-		JButton graph = new JButton("graph");
-
-		add.setFont(f1);
-		add.setBounds(20, 340, 100, 30);
-
-		remove.setFont(f1);
-		remove.setBounds(370, 340, 100, 30);
-
-		additems.setFont(f1);
-		additems.setBounds(190, 240, 130, 30);
+		JButton add = new JButton("상품 추가");
+		JButton remove_one = new JButton("선택 상품 제거");
+		JButton remove_all = new JButton("전체 상품 제거");
+		JButton additems = new JButton("상품 전체 리스트");
 
 		j2.add(add);
-		j2.add(remove);
+		j2.add(remove_one);
+		j2.add(remove_all);
 		j2.add(additems);
-		j2.add(graph);
 
-		additems.addActionListener(new ActionListener() {
-
+		remove_one.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				int tmp = Integer.parseInt(total_price.getText())-(Integer.parseInt(model2.getValueAt(table2.getSelectedRow(), 3).toString())*Integer.parseInt(model2.getValueAt(table2.getSelectedRow(), 5).toString()));
+				total_price.setText(String.valueOf(tmp));
+				model2.removeRow(table2.getSelectedRow());
 			}
 		});
 
-		remove.addActionListener(new ActionListener() {
-
+		remove_all.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				model2.setNumRows(0);
+				total_price.setText("0");
 			}
 		});
 
 		additems.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFrame jf = new JFrame("insert/remove data");
-				jf.setLayout(new FlowLayout());
-
-				JLabel lb = new JLabel("원산지 입력");
-				JTextField tx = new JTextField(20);
-				JLabel lb2 = new JLabel("가격 입력");
-				JTextField tx2 = new JTextField(20);
-				JButton addbtn = new JButton("추가");
-				JButton removebtn = new JButton("삭제");
-
-				lb.setFont(f1);
-				lb2.setFont(f1);
-				addbtn.setFont(f1);
-				removebtn.setFont(f1);
-
-				jf.add(lb);
-				jf.add(tx);
-				jf.add(lb2);
-				jf.add(tx2);
-				jf.add(addbtn);
-				jf.add(removebtn);
-
-				// insert/remove items
-				jf.setSize(1000, 150);
-				jf.setVisible(true);
-
-				addbtn.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						String inputstr[] = new String[2];
-
-						inputstr[0] = tx.getText();
-						inputstr[1] = tx2.getText();
-						model.addRow(inputstr);
-
-						tx.setText("");
-						tx2.setText("");
-
-					}
-				}); // addbtn listener
-				removebtn.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						if (table.getSelectedRow() == -1) {
-							return;
-						} else {
-							model.removeRow(table.getSelectedRow());
-						}
-
-					}
-				}); // remove button
-
+				new Seeall(data);
 			}
 
 		}); // insert/remove listener
 
 		// combobox listener
-		comboname.addActionListener(new ActionListener() {
+		label1_combobox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox jcb = (JComboBox) e.getSource();
 				combo1 = jcb.getSelectedItem();
@@ -245,8 +218,8 @@ public class MAIN extends JFrame {
 
 				// 맞춤 table 가져오기---------------------------------------
 				List<List<String>> tmp = new ArrayList<List<String>>();
-				for (int i = 0; i < conten.size(); i++) {
-					List<String> row = conten.get(i);
+				for (int i = 0; i < data.size(); i++) {
+					List<String> row = data.get(i);
 					if (row.get(0).equals(combo1)) {
 						tmp.add(row);
 					}
@@ -286,8 +259,8 @@ public class MAIN extends JFrame {
 				sc2.setEnabled(true);
 
 				List<List<String>> tmp = new ArrayList<List<String>>();
-				for (int i = 0; i < conten.size(); i++) {
-					List<String> row = conten.get(i);
+				for (int i = 0; i < data.size(); i++) {
+					List<String> row = data.get(i);
 					if (row.get(0).equals(combo1) && row.get(4).equals(combo2)) {
 						tmp.add(row);
 					}
@@ -304,14 +277,12 @@ public class MAIN extends JFrame {
 
 			}
 		});
-
 		// Add all button listener
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addFrame addT = new addFrame(table, table2, total_price);
 			}
 		});
-
 		// ui
 		setSize(1000, 650);
 		setVisible(true);
@@ -325,7 +296,6 @@ public class MAIN extends JFrame {
 class Tools {
 	List<List<String>> ret = new ArrayList<List<String>>();
 	List<String> itemList = new ArrayList<String>();
-
 	public List<List<String>> run() {
 		BufferedReader br = null;
 		String line;
