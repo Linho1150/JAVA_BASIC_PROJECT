@@ -23,15 +23,11 @@ class addFrame extends JFrame {
 		this.table2 = table2;
 		this.total_price = total_price;
 
-		setTitle("add");
-		Font f1 = new Font("돋움", Font.PLAIN, 10);
+		setTitle("상품추가");
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
 		JLabel lb = new JLabel("수량 입력");
-
-		lb.setFont(f1);
-		ok.setFont(f1);
 
 		c.add(lb);
 		c.add(tx);
@@ -78,7 +74,7 @@ class Seeall extends JFrame {
 			array[i] = row.toArray(new String[row.size()]); 
 		}
 		
-		setTitle("add");
+		setTitle("상품 전체 리스트");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
@@ -97,6 +93,63 @@ class Seeall extends JFrame {
 		ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//window 닫기 기능
+				setVisible(false);
+			}
+		});
+	}
+}
+
+class addItem extends JFrame {
+	private JButton ok = new JButton("확인");
+	private String header[] = { "품목명", "단위", "등급", "가격", "산지", "친환경구분", "입력일" };
+
+	public addItem() {
+
+		setTitle("상품 등록");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		Container c = getContentPane();
+		c.setLayout(new FlowLayout());
+		
+		JLabel lb1 = new JLabel("상품 명");
+		JLabel lb2 = new JLabel("상품 단위");
+		JLabel lb3 = new JLabel("상품 등급");
+		JLabel lb4 = new JLabel("상품 가격");
+		JLabel lb5 = new JLabel("상품 산지");
+		JLabel lb6 = new JLabel("상품 친환경여부");
+		JLabel lb7 = new JLabel("상품 등록일");
+
+		JTextField jt1 = new JTextField(20);
+		JTextField jt2 = new JTextField(20);
+		JTextField jt3 = new JTextField(20);
+		JTextField jt4 = new JTextField(20);
+		JTextField jt5 = new JTextField(20);
+		JTextField jt6 = new JTextField(20);
+		JTextField jt7 = new JTextField(20);
+		
+		JButton jb1= new JButton("등록");
+		
+		c.add(lb1);
+		c.add(jt1);
+		c.add(lb2);
+		c.add(jt2);
+		c.add(lb3);
+		c.add(jt3);
+		c.add(lb4);
+		c.add(jt4);
+		c.add(lb5);
+		c.add(jt5);
+		c.add(lb6);
+		c.add(jt6);
+		c.add(lb7);
+		c.add(jt7);
+		c.add(jb1);
+
+		setSize(250, 500);
+		setVisible(true);
+
+		jb1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//리스트에 항목 추가해서 전체 리스트 csv 파일로 저장하는 기능 구현하기.
 				setVisible(false);
 			}
 		});
@@ -132,12 +185,15 @@ public class MAIN extends JFrame {
 
 		JPanel j1 = new JPanel();
 		JPanel j2 = new JPanel();
+		JPanel j3 = new JPanel();
 
-		j1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 2));
+		j1.setLayout(new FlowLayout());
 		j2.setLayout(new FlowLayout());
+		j3.setLayout(new FlowLayout());
 
 		c.add(j1, BorderLayout.NORTH);
-		c.add(j2);
+		c.add(j2, BorderLayout.CENTER);
+		c.add(j3, BorderLayout.SOUTH);
 
 		// panel j1
 		// Jcombobox1
@@ -155,11 +211,6 @@ public class MAIN extends JFrame {
 		j1.add(comboname1);
 		comboname1.setEnabled(false);
 
-		JLabel total = new JLabel(" 총금액 : ");
-		j1.add(total);
-		JLabel total_price = new JLabel("0");
-		j1.add(total_price);
-
 		// panel j2
 		// JTable원산지
 		String[][] array = new String[0][];
@@ -173,17 +224,27 @@ public class MAIN extends JFrame {
 		JTable table2 = new JTable(model2);
 		JScrollPane sc2 = new JScrollPane(table2);
 		j2.add(sc2);
+		
+		// 총 금액
+		JLabel total = new JLabel(" 총금액 : ");
+		j2.add(total);
+		JLabel total_price = new JLabel("0");
+		j2.add(total_price);
+		JLabel won = new JLabel("원");
+		j2.add(won);
 
 		// button
-		JButton add = new JButton("상품 추가");
-		JButton remove_one = new JButton("선택 상품 제거");
-		JButton remove_all = new JButton("전체 상품 제거");
-		JButton additems = new JButton("상품 전체 리스트");
+		JButton add = new JButton("선택항목 장바구니 추가");
+		JButton remove_one = new JButton("선택항목 장바구니 제거");
+		JButton remove_all = new JButton("전체항목 장바구니 제거");
+		JButton seeitem = new JButton("상품 전체 리스트");
+		JButton additem = new JButton("상품 등록");
 
-		j2.add(add);
-		j2.add(remove_one);
-		j2.add(remove_all);
-		j2.add(additems);
+		j3.add(add);
+		j3.add(remove_one);
+		j3.add(remove_all);
+		j3.add(seeitem);
+		j3.add(additem);
 
 		remove_one.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -200,12 +261,19 @@ public class MAIN extends JFrame {
 			}
 		});
 
-		additems.addActionListener(new ActionListener() {
+		seeitem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Seeall(data);
 			}
 
-		}); // insert/remove listener
+		}); 
+		
+		additem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new addItem();
+			}
+
+		}); 
 
 		// combobox listener
 		label1_combobox.addActionListener(new ActionListener() {
@@ -284,7 +352,7 @@ public class MAIN extends JFrame {
 			}
 		});
 		// ui
-		setSize(1000, 650);
+		setSize(950, 580);
 		setVisible(true);
 	}
 
